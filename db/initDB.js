@@ -59,7 +59,8 @@ async function createTable() {
         post_id INT UNSIGNED NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (post_id) REFERENCES posts(id)
+        FOREIGN KEY (post_id) REFERENCES posts(id),
+        UNIQUE KEY unique_like (user_id, post_id)  -- Asegura que un usuario solo pueda dar un like a un post una vez
       )
     `;
 

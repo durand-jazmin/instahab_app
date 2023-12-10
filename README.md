@@ -11,7 +11,6 @@
 # DESCRIPCIÓN:
 #
 # Implementar una API que permita publicar fotos (añadiendo o no textos) y que otras personas puedan verlas.
-### Comando de ejemplo: cnode process.js --inputDir=images --outputDir=result --watermark=hab.png --resize=500
 #
 # USUARIOS ANÓNIMOS: uuid
 # 

@@ -1,24 +1,26 @@
 var dotenv = require('dotenv');
 var mysql = require('mysql2/promise');
-const { v4: uuidv4 } = require('uuid');
-// Generar un UUID
-const newUUID = uuidv4();
+var fs = require('fs');
 
+// Cargar variables de entorno desde el archivo .env
 dotenv.config();
-
-var MYSQL_HOST = process.env.MYSQL_HOST;
-var MYSQL_USER = process.env.MYSQL_USER;
-var MYSQL_PASS = process.env.MYSQL_PASSWORD;
-var MYSQL_DB = process.env.MYSQL_DATABASE;
 
 async function createTable() {
   try {
+    // Obtener datos de las variables de entorno
+   var MYSQL_HOST = process.env.MYSQL_HOST;
+   var MYSQL_USER = process.env.MYSQL_USER;
+   var MYSQL_PASS = process.env.MYSQL_PASSWORD;
+   var MYSQL_DB = process.env.MYSQL_DATABASE;
+
+    // Crear la conexión a la base de datos
     const connection = await mysql.createConnection({
       host: MYSQL_HOST,
       user: MYSQL_USER,
       password: MYSQL_PASS,
       database: MYSQL_DB,
     });
+
 
     // Consulta SQL para crear la tabla 'users'
     const createUserTableQuery = `
@@ -42,15 +44,6 @@ async function createTable() {
       )
     `;
 
-    // Consulta SQL para crear la tabla 'anonymous_users'
-    const createAnonymousUsersTableQuery = `
-      CREATE TABLE IF NOT EXISTS anonymous_users (
-        id VARCHAR(36) PRIMARY KEY ,
-        name_a VARCHAR(100) NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
-
     // Consulta SQL para crear la tabla 'likes'
     const createLikesTableQuery = `
       CREATE TABLE IF NOT EXISTS likes (
@@ -63,6 +56,20 @@ async function createTable() {
       )
     `;
 
+// Consulta SQL para crear la tabla 'comments'
+const createCommentsTableQuery = `
+  CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    post_id INT UNSIGNED NOT NULL,
+    comment_text TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id)
+  )
+`;
+
+
     // Ejecutar las consultas para crear las tablas
     await connection.query(createUserTableQuery);
     console.log('Tabla "users" creada correctamente.');
@@ -70,11 +77,11 @@ async function createTable() {
     await connection.query(createPostsTableQuery);
     console.log('Tabla "posts" creada correctamente.');
 
-    await connection.query(createAnonymousUsersTableQuery);
-    console.log('Tabla "anonymous_users" creada correctamente.');
-
     await connection.query(createLikesTableQuery);
     console.log('Tabla "likes" creada correctamente.');
+
+    await connection.query(createCommentsTableQuery);
+    console.log('Tabla "comments" creada correctamente.');
 
     connection.end(); // Cerrar la conexión
   } catch (error) {

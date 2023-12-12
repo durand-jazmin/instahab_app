@@ -1,5 +1,6 @@
 var dotenv = require('dotenv');
 var mysql = require('mysql2/promise');
+var fs = require('fs');
 
 // Cargar las variables de entorno desde el archivo .env
 dotenv.config();
@@ -15,6 +16,7 @@ function createDatabase() {
     user: MYSQL_USER,
     password: MYSQL_PASS,
   }).then(function(connection) {
+
     // Crear la base de datos si no existe
     connection.query('CREATE DATABASE IF NOT EXISTS ' + MYSQL_DB)
       .then(function() {

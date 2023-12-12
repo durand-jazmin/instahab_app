@@ -1,4 +1,7 @@
-const { generateError } = require('../helpers');
+const bcrypt = require('bcrypt');
+const { generateError,createPathIfNotExists } = require('../helpers');
+const fs = require('fs');
+const path = require('path');
 const { getConnection } = require('./getPool');
 
 const detelePostById = async (id) => {
@@ -59,18 +62,29 @@ const getAllPosts = async () => {
   }
 };
 
-const createPost = async (userId, text, post = '') => {
-  let connection;
+var createPost = async function(userId, text, image) {
+  var connection;
+
+  if (!userId || !text || !image) {
+    throw new Error('El ID de usuario, el texto y la imagen son obligatorios');
+  }
+
+  if (text.length > 100) {
+    throw new Error('El texto debe tener menos de 100 caracteres');
+  }
 
   try {
     connection = await getConnection();
 
-    const [result] = await connection.query(
-      `
-      INSERT INTO posts (user_id, text, post)
-      VALUES(?,?,?)
-    `,
-      [userId, text, post]
+    var userExists = await checkUserExists(userId); // Verificar si el usuario existe
+
+    if (!userExists) {
+      throw new Error('El usuario no está registrado');
+    }
+
+    var result = await connection.query(
+      'INSERT INTO posts (user_id, text, image) VALUES (?, ?, ?)',
+      [userId, text, image]
     );
 
     return result.insertId;
@@ -78,6 +92,7 @@ const createPost = async (userId, text, post = '') => {
     if (connection) connection.release();
   }
 };
+
 
 module.exports = {
   createPost,

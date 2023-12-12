@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
-const { generateError } = require('../helpers');
+const { generateError,createPathIfNotExists } = require('../helpers');
+const fs = require('fs');
+const path = require('path');
 const { getConnection } = require('./getPool');
 
 // Devuelve la información pública de un usuario por su id

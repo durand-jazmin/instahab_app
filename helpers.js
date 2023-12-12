@@ -1,24 +1,20 @@
-const fs = require("fs/promises");
+const fs = require('fs/promises');
 
-//función que comprueba que una ruta existe en disco
-async function pathExists(path) {
-  try {
-    await fs.access(path);
-  } catch {
-    throw new Error(`La ruta ${path} no existe`);
-  }
-}
+const generateError = (message, status) => {
+  const error = new Error(message);
+  error.httpStatus = status;
+  return error;
+};
 
-//función que crea una ruta en disco si no existe
-async function createPathIfNotExists(path) {
+const createPathIfNotExists = async (path) => {
   try {
     await fs.access(path);
   } catch {
     await fs.mkdir(path);
   }
-}
+};
 
 module.exports = {
-  pathExists,
+  generateError,
   createPathIfNotExists,
 };

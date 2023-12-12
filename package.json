@@ -1,0 +1,31 @@
+{
+  "type": "commonjs",
+  "name": "twitter",
+  "version": "1.0.0",
+  "description": "Este ejercicio consiste en crear una API que simule el funcionamiento de una aplicación similar a Twitter.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "nodemon": "^3.0.2",
+    "prettier": "^2.8.8"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "fs": "^0.0.1-security",
+    "joi": "^17.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "nanoid": "^3.3.7",
+    "sharp": "^0.33.0"
+  }
+}
